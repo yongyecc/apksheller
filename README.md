@@ -78,7 +78,9 @@ python -f xxx.apk
 
 # 问题
 
-【1】apktool.jar编译smali项目时，如果出现png结尾的GIF文件时，会编译失败，这里我的解决方法时将GIF强行转换成PNG，解决问题
+【1】**libpng error: Not a PNG file**：apktool.jar编译smali项目时，如果出现png结尾的GIF文件时，会编译失败，这里我的解决方法时将GIF强行转换成PNG，解决问题。
+
+中途解决该问题时，曾尝试使用[AXMLEditor](https://github.com/fourbrother/AXMLEditor)修改二进制Androidmanifest.xml的开源工具直接修改，然后想绕过编译资源步骤，实际不能成功，因为更改过后的application name字段在编译资源过程中，会被记录下来，而直接修改导致没有被记录，android系统是识别不到修改后的这个字段值
 
 # 参考
 

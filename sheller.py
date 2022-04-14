@@ -199,12 +199,7 @@ def replaceSDexToShellDex(stSApkFp):
     add_srcDexToShellDex(stSDexFp, stShellDexFp)
     #将修改后的壳DEX添加到原DEX中
 
-    cmd1 = []
-    cmd1.append(staaptPt)
-    cmd1.append("r")
-    cmd1.append(stSApkFp)
-    cmd1.append("classes.dex")
-    check_call(cmd1)
+    deleteZipItem(stSApkFp, 'classes.dex')
 
     oNewApk = zipfile.ZipFile(stSApkFp, "a")
     oNewApk.write("classes.dex", "classes.dex")
@@ -212,6 +207,18 @@ def replaceSDexToShellDex(stSApkFp):
 
     os.remove(stSDexFp)
     os.remove(stShellDexFp)
+
+
+def deleteZipItem(zp, pp):
+    zoutp = '{}-out'.format(zp)
+    zin = zipfile.ZipFile(zp, mode='r')
+    zout = zipfile.ZipFile(zoutp, mode='w', compression=zipfile.ZIP_DEFLATED)
+    for item in zin.infolist():
+        if item.filename == pp: continue
+        zout.writestr(item, zin.read(item))
+    zin.close()
+    zout.close()
+    shutil.move(zoutp, zp)
 
 
 def signApk(fp, stKeystoreFp):

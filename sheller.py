@@ -14,13 +14,13 @@ from PIL import Image
 import shutil
 
 
-stApkToolPt = r'D:\Tools\ReverseTools\android\apktool_2.4.1.jar'
-stShellAppPt = r'.\shellApplicationSourceCode'
-staaptPt = r'D:\Android\Sdk\build-tools\29.0.3\aapt.exe'
-stAndroidJarlibPt = r'D:\Android\Sdk\platforms\android-29\android.jar'
-stdxJarPt = r'D:\Android\Sdk\build-tools\29.0.3\lib\dx.jar'
-stApksignJarPt = r'D:\Android\Sdk\build-tools\29.0.3\lib\apksigner.jar'
 stCurrentPt = os.path.abspath(__file__).replace(os.path.basename(__file__), "")
+stApkToolPt = os.path.join(stCurrentPt, 'tools', 'apktool_2.5.0.jar')
+stShellAppPt = os.path.join(stCurrentPt, 'shellApplicationSourceCode')
+staaptPt = os.path.join(stCurrentPt, 'tools', 'aapt.exe')
+stAndroidJarlibPt = os.path.join(stCurrentPt, 'tools', 'android.jar')
+stdxJarPt = os.path.join(stCurrentPt, 'tools', 'dx.jar')
+stApksignJarPt = os.path.join(stCurrentPt, 'tools', 'apksigner.jar')
 
 
 def add_srcDexToShellDex(srcDex, shellDex):

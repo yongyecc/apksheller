@@ -1,5 +1,5 @@
 package cn.yongye.stub.common;
 
 public class Config {
-    public static final String MAIN_APPLICATION = "com.crland.epos.BaseApplication";
+    public static final String MAIN_APPLICATION = "com.skps.tny.KXQdapplicationts";
 }

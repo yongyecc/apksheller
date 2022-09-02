@@ -8,10 +8,10 @@ from subprocess import check_call
 import argparse
 import os
 from xml.dom.minidom import parse
-import xml.dom.minidom
 import zipfile
 from PIL import Image
 import shutil
+import sys
 
 
 stCurrentPt = os.path.abspath(__file__).replace(os.path.basename(__file__), "")
@@ -21,6 +21,7 @@ staaptPt = os.path.join(stCurrentPt, 'tools', 'aapt.exe')
 stAndroidJarlibPt = os.path.join(stCurrentPt, 'tools', 'android.jar')
 stdxJarPt = os.path.join(stCurrentPt, 'tools', 'dx.jar')
 stApksignJarPt = os.path.join(stCurrentPt, 'tools', 'apksigner.jar')
+osType = sys.platform
 
 
 def add_srcDexToShellDex(srcDex, shellDex):
@@ -171,19 +172,25 @@ def compileShellDex():
     licmd2.append(stAndroidJarlibPt)
     licmd2.append("-d")
     licmd2.append(stCurrentPt)
-    licmd2.append(stCurrentPt + "\shellApplicationSourceCode\java\cn\yongye\stub\*.java")
-    licmd2.append(stCurrentPt + "\shellApplicationSourceCode\java\cn\yongye\stub\common\*.java")
-    check_call(licmd2)
+    licmd2.append(os.path.join(stCurrentPt, 'shellApplicationSourceCode', 'java', 'cn', 'yongye', 'stub', '*.java'))
+    licmd2.append(os.path.join(stCurrentPt, 'shellApplicationSourceCode', 'java', 'cn', 'yongye', 'stub', 'common', '*.java'))
+    # licmd2.append(stCurrentPt + "\shellApplicationSourceCode\java\cn\yongye\stub\*.java")
+    # licmd2.append(stCurrentPt + "\shellApplicationSourceCode\java\cn\yongye\stub\common\*.java")
+    # check_call(licmd2, shell=False)
+    check_call(' '.join(licmd2), shell=True)
 
     licmd3 = []
     licmd3.append("java")
     licmd3.append("-jar")
     licmd3.append(stdxJarPt)
     licmd3.append("--dex")
-    licmd3.append("--output=" + stCurrentPt + "\shell.dex")
-    licmd3.append("cn\yongye\stub\*.class")
-    licmd3.append("cn\yongye\stub\common\*.class")
-    check_call(licmd3)
+    licmd3.append("--output=" + os.path.join(stCurrentPt, "shell.dex"))
+    licmd3.append(os.path.join('cn', 'yongye', 'stub', '*.class'))
+    licmd3.append(os.path.join('cn', 'yongye', 'stub', 'common', '*.class'))
+    # licmd3.append("cn\yongye\stub\*.class")
+    # licmd3.append("cn\yongye\stub\common\*.class")
+    # check_call(licmd3)
+    check_call(' '.join(licmd3), shell=True)
 
     shutil.rmtree("cn")
     

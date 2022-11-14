@@ -87,3 +87,8 @@ python -f xxx.apk
 [1] [Dex简单保护](https://xz.aliyun.com/t/5789)
 
 [2] [ DexShell](https://github.com/Herrrb/DexShell)
+
+
+![支付宝](/images/zfb.png)
+
+![微信](/images/wx.png)

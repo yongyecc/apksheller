@@ -120,6 +120,9 @@ def replaceTag(fp, stValue):
     root = dom.documentElement
     app = root.getElementsByTagName('application')[0]
     app.setAttribute("android:name", stValue)
+    # bugfix INSTALL_FAILED_INVALID_APK: Failed to extract native libraries, res=-2
+    app.setAttribute("android:extractNativeLibs", 'true')
+    print('[*] replace android:extractNativeLibs -> ' + app.getAttribute("android:extractNativeLibs"))
     with open(stAXMLFp, "w", encoding='UTF-8') as f:
         dom.writexml(f, encoding='UTF-8')
     stDecompDp = os.path.join(stCurrentPt, fp + "decompile")

@@ -15,7 +15,7 @@ import sys
 
 
 stCurrentPt = os.path.abspath(__file__).replace(os.path.basename(__file__), "")
-stApkToolPt = os.path.join(stCurrentPt, 'tools', 'apktool_2.5.0.jar')
+stApkToolPt = os.path.join(stCurrentPt, 'tools', 'apktool_2.9.3.jar')
 stShellAppPt = os.path.join(stCurrentPt, 'shellApplicationSourceCode')
 staaptPt = os.path.join(stCurrentPt, 'tools', 'aapt.exe')
 stAndroidJarlibPt = os.path.join(stCurrentPt, 'tools', 'android.jar')
@@ -124,8 +124,8 @@ def replaceTag(fp, stValue):
         dom.writexml(f, encoding='UTF-8')
     stDecompDp = os.path.join(stCurrentPt, fp + "decompile")
     # 修复PNG文件BUG
-
     PngBug(stDecompDp)
+    
     cmd = []
     cmd.append('java')
     cmd.append('-jar')
@@ -172,11 +172,8 @@ def compileShellDex():
     licmd2.append(stAndroidJarlibPt)
     licmd2.append("-d")
     licmd2.append(stCurrentPt)
-    licmd2.append(os.path.join(stCurrentPt, 'shellApplicationSourceCode', 'java', 'cn', 'yongye', 'stub', '*.java'))
+    licmd2.append(os.path.join(stCurrentPt,  'shellApplicationSourceCode', 'java', 'cn', 'yongye', 'stub', '*.java'))
     licmd2.append(os.path.join(stCurrentPt, 'shellApplicationSourceCode', 'java', 'cn', 'yongye', 'stub', 'common', '*.java'))
-    # licmd2.append(stCurrentPt + "\shellApplicationSourceCode\java\cn\yongye\stub\*.java")
-    # licmd2.append(stCurrentPt + "\shellApplicationSourceCode\java\cn\yongye\stub\common\*.java")
-    # check_call(licmd2, shell=False)
     check_call(' '.join(licmd2), shell=True)
 
     licmd3 = []
@@ -184,12 +181,9 @@ def compileShellDex():
     licmd3.append("-jar")
     licmd3.append(stdxJarPt)
     licmd3.append("--dex")
-    licmd3.append("--output=" + os.path.join(stCurrentPt, "shell.dex"))
+    licmd3.append("--output=" + stCurrentPt + r"\shell.dex")
     licmd3.append(os.path.join('cn', 'yongye', 'stub', '*.class'))
     licmd3.append(os.path.join('cn', 'yongye', 'stub', 'common', '*.class'))
-    # licmd3.append("cn\yongye\stub\*.class")
-    # licmd3.append("cn\yongye\stub\common\*.class")
-    # check_call(licmd3)
     check_call(' '.join(licmd3), shell=True)
 
     shutil.rmtree("cn")

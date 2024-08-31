@@ -30,7 +30,6 @@ import dalvik.system.DexClassLoader;
 public class StubApp extends Application {
 
     private String TAG = "yongye";
-    private String stSrcDexName = "yongye.jar";
     private Application oApp = this;
     private String stDmpDexPt = null;
 
@@ -42,7 +41,7 @@ public class StubApp extends Application {
          * 1.解密原始DEX到缓存目录下yongye
          */
         byte[] baSrcDex = null;
-        stDmpDexPt = oApp.getCacheDir().getAbsolutePath() + "/yongye";
+        stDmpDexPt =  oApp.getFilesDir().getAbsolutePath() + "/" +  "/yongye.dex";
         File libs = oApp.getDir("libs", Context.MODE_PRIVATE);
         byte[] baDex = null;
         try {
@@ -61,8 +60,9 @@ public class StubApp extends Application {
         String stActivityThread = "android.app.ActivityThread";
         String stClassLoadedApk = "android.app.LoadedApk";
         String stCurrentPkgName = this.getPackageName();
-
-        File nativeLib = new File(FileUtils.getParent(libs), "lib");
+        
+        //bugfix libxxx.so not found in classloader
+        File nativeLib = new File(this.getApplicationInfo().nativeLibraryDir);
 
         Object obCurrentActivityThread = RefInvoke.invokeStaticMethod(stActivityThread,
                 "currentActivityThread", new Class[]{}, new Object[]{});
@@ -72,9 +72,12 @@ public class StubApp extends Application {
         DexClassLoader oDexClassLoader = new DexClassLoader(stDmpDexPt, oApp.getCacheDir().getAbsolutePath(),
                 nativeLib.getAbsolutePath(), (ClassLoader)RefInvoke.getFieldObject(stClassLoadedApk,
                 wr.get(), "mClassLoader"));
-
-        // load(oApp, oDexClassLoader, "/data/local/tmp/classes2.dex");
+        
+        //bugfix class not found
+        load(oApp, stDmpDexPt);
+        load(oApp, oApp.getApplicationInfo().sourceDir);
         RefInvoke.setFieldObject(stClassLoadedApk, "mClassLoader", wr.get(), oDexClassLoader);
+        RefInvoke.setFieldObject(stClassLoadedApk, "mResDir", wr.get(), oApp.getApplicationInfo().sourceDir);
         Log.i(TAG, "load source dex completed.");
 
         /**
@@ -98,13 +101,16 @@ public class StubApp extends Application {
         for (Map.Entry<?, ?> entry : mProviderMap.entrySet()) {
             Object providerClientRecord = entry.getValue();
             Object mLocalProvider = RefInvoke.getFieldObject(stActivityThread+"$ProviderClientRecord", providerClientRecord, "mLocalProvider");
-            RefInvoke.setFieldObject("android.content.ContentProvider", "mContext", mLocalProvider, makeApplication);
+            if (mLocalProvider != null) {
+                RefInvoke.setFieldObject("android.content.ContentProvider", "mContext", mLocalProvider, makeApplication);
+            }
         }
         makeApplication.onCreate();
+        Log.i(TAG, "getClassLoader - " + getClassLoader());
         Log.i(TAG, "unshell completed.");
     }
 
-    public void load(Context oApp, DexClassLoader dcl, String path) {
+    public void load(Context oApp, String path) {
         try {
             // 已加载的dex
             Object dexPathList = getField(BaseDexClassLoader.class, "pathList", oApp.getClassLoader());
@@ -112,6 +118,7 @@ public class StubApp extends Application {
 
             // patchdex
             String dexOptDir = oApp.getCacheDir().getAbsolutePath();
+            DexClassLoader dcl = new DexClassLoader(path, dexOptDir, null, oApp.getClassLoader());
             Object patchDexPathList = getField(BaseDexClassLoader.class, "pathList", dcl);
             Object patchDexElements = getField(patchDexPathList.getClass(), "dexElements", patchDexPathList);
 

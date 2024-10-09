@@ -113,13 +113,13 @@ vx: xcc1014885794
 <summary>
 	<mark><font size=5 color=darkred>微信捐赠</font></mark>
 </summary>
-<img src="https://github.com/yongyecc/apksheller/images/wx.jpg"/>
+<img src="https://github.com/yongyecc/apksheller/blob/master/images/wx.jpg"/>
 </details>
 
 <details>
 <summary>
 	<mark><font size=5 color=darkred>支付宝捐赠</font></mark>
 </summary>
-<img src="https://github.com/yongyecc/apksheller/images/zfb.jpg"/>
+<img src="https://github.com/yongyecc/apksheller/blob/master/images/zfb.jpg"/>
 </details>
 
